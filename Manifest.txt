@@ -1,0 +1,12 @@
+History.txt
+Manifest.txt
+PostInstall.txt
+README.rdoc
+Rakefile
+lib/jetty.rb
+script/console
+script/destroy
+script/generate
+test/test_helper.rb
+test/test_jetty.rb
+vendor/*.jar
