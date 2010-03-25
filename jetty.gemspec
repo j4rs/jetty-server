@@ -14,4 +14,5 @@ spec = Gem::Specification.new do |s|
   s.author = "Jorge Rodriguez"
   s.email = "jars@continuum.cl"
   s.homepage = "http://continuum.cl"
+  s.add_dependency 'webrat', '>=0.7'
 end

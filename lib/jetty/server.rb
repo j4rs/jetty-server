@@ -12,16 +12,23 @@ module Jetty
   end
 
   class Configuration
+
+    # no debe ser requerido si no se usa spring
     attr_accessor :dispatcher_server_name
+    attr_accessor :mode # :spring
+
     attr_accessor :port
     attr_accessor :webapp_dir
 
     def initialize
-      self.port = 8888
-      self.webapp_dir = "web"
+      @port = 8888
+      @webapp_dir = Dir.pwd + "/web"
+      raise "The path #{@webapp_dir} does not exist" unless test ?d, @webapp_dir
+      raise "The path #{@webapp_dir}/WEB-INF/lib does not exist" unless test ?d, @webapp_dir + "/WEB-INF/lib"
       Dir[
         File.expand_path(File.dirname(__FILE__)) + "/../../vendor/*.jar",
-        File.expand_path(File.dirname(__FILE__))  + "/../../resources"
+        File.expand_path(File.dirname(__FILE__))  + "/../../resources",
+        @webapp_dir + "/WEB-INF/lib/*.jar"
       ].each { | f | $CLASSPATH << f }
     end
 
@@ -46,6 +53,8 @@ module Jetty
 
       @@server.set_handler wac
       @@server.start
+
+      # solo si el modo es spring y se seteo el dispatcher_server_name
       @@app_ctx = wac.get_servlet_handler.get_servlet(Jetty.configuration.dispatcher_server_name).get_servlet_instance().get_web_application_context
     end
 
@@ -53,6 +62,7 @@ module Jetty
       @@server.stop
     end
 
+    # Solo se debe definir si se esta usando spring
     def get_bean(id)
       bean = @@app_ctx.get_bean id
       while bean.nil? do
