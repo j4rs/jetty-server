@@ -19,10 +19,12 @@ module Jetty
 
     attr_accessor :port
     attr_accessor :webapp_dir
+    attr_accessor :context_path
 
     def initialize
       @port = 8888
       @webapp_dir = Dir.pwd + "/web"
+      @context_path = ""
       raise "The path #{@webapp_dir} does not exist" unless test ?d, @webapp_dir
       raise "The path #{@webapp_dir}/WEB-INF/lib does not exist" unless test ?d, @webapp_dir + "/WEB-INF/lib"
       Dir[
@@ -47,7 +49,7 @@ module Jetty
       @@server = Server.new Jetty.configuration.port
 
       wac = WebAppContext.new
-      wac.set_context_path Jetty.configuration.context_path unless Jetty.configuration.context_path.nil?
+      wac.set_context_path Jetty.configuration.context_path unless Jetty.configuration.context_path.empty?
       wac.set_descriptor Jetty.configuration.webapp_dir + "/WEB-INF/web.xml"
       wac.set_parent_loader_priority true
       wac.setResourceBase Jetty.configuration.webapp_dir
