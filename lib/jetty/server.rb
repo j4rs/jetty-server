@@ -49,6 +49,7 @@ module Jetty
       @@server = Server.new Jetty.configuration.port
 
       wac = WebAppContext.new
+      wac.set_copy_web_dir true
       wac.set_context_path Jetty.configuration.context_path unless Jetty.configuration.context_path.empty?
       wac.set_descriptor Jetty.configuration.webapp_dir + "/WEB-INF/web.xml"
       wac.set_parent_loader_priority true
